@@ -23,7 +23,7 @@ Clean modal on load with instructions and game title.  Three buttons across the 
 - Personal portfolio link
 - Music toggle (default: off)
 
-![wireframe](design/wireframe.png)
+![wireframe](docs/wireframe.png)
 
 #### Build
 - Pure JavaScript for logic.
