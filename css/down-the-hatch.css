@@ -23,4 +23,5 @@ time, mark, audio, video {
   display: flex;
   display: -webkit-flex;
   -webkit-justify-content: center;
+	height: 100%;
 }

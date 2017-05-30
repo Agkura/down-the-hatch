@@ -17,28 +17,33 @@
     </script>
     <script src="https://code.createjs.com/easeljs-0.8.2.min.js"></script>
     <script src="bundle.js"></script>
+    <script src="lib/keymaster/keymaster.js"></script>
   </head>
 
-  <body onload="init();">
-    <script>
+  <body  >
+    <!-- <script>
       var stage, circle;
       function init(){
-        stage = new createjs.Stage("hatch");
+        let canvas = document.getElementById("hatch")
+        canvas.height = Math.floor(window.innerHeight * 0.9);
+        canvas.width = Math.floor(window.innerWidth * 0.9);
+        stage = new createjs.Stage(canvas);
         circle = new createjs.Shape();
-        circle.graphics.beginFill("DeepSkyBlue").drawCircle(0,0,90);
+        circle.graphics.beginFill("DeepSkyBlue").drawRect(0,0,90,90);
         circle.x = 200;
         circle.y = 200;
+        console.log(circle);
         stage.addChild(circle);
         createjs.Ticker.on("tick", tick);
         createjs.Ticker.setFPS(60);
       }
 
       function tick(event){
-        circle.x += event.delta/1000*500;
-        if (circle.x-90 > stage.canvas.width) {circle.x=0;}
+        circle.y += 5;
+        if (circle.y-90 > stage.canvas.height) {circle.y=0;}
         stage.update(event);
       }
-    </script>
+    </script> -->
     <div class="game">
       <canvas id="hatch">
         Your browser does not support HTML5 Canvas on which this application is built.
