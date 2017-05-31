@@ -25,3 +25,7 @@ time, mark, audio, video {
   -webkit-justify-content: center;
 	height: 100%;
 }
+
+#hatch {
+	border: 1px solid black;
+}
