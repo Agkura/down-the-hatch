@@ -78,9 +78,10 @@ class Ball{ // make static or js object
   createBall(){
     let ball = new createjs.Shape()
     let container = new createjs.Container();
-    ball.graphics.beginFill("#ff0000").drawCircle(0, 0, this.radius, this.radius)
+    ball.graphics.beginFill("#FFFFFF").drawCircle(0, 0, this.radius, this.radius)
     container.addChild(ball);
     container.x = this.width/2;
+    container.y = 0;
     // ball.setBounds(-this.radius/2,-this.radius/2, this.radius, this.radius);
     container.setBounds(-this.radius/2,-this.radius/2, this.radius, this.radius);
     return container;
@@ -108,6 +109,7 @@ class Game{
     this.lineHeight;
     this.yLine;
     this.generationRate = 40;
+    this.score = 0;
 
     //Keep the same speed across any window size
     this.fallRate = Math.floor(this.stage.canvas.height * 0.008);
@@ -115,10 +117,12 @@ class Game{
 
     this.start = this.start.bind(this);
     this.generateWall = this.generateWall.bind(this);
+    this.increaseFrequency = this.increaseFrequency.bind(this);
   }
 
 
   start(){
+    this.checkGameOver();
 
     this.ball.y += this.fallRate;
     //Ball would cross through a block in the line
@@ -143,7 +147,7 @@ class Game{
     this.stage.update();
 
 
-    if (createjs.Ticker.getTicks() % this.generationRate === 0) {
+    if (createjs.Ticker.getTicks(true) % this.generationRate === 0) {
       this.generateWall();
     }
     this.stage.update();
@@ -153,7 +157,10 @@ class Game{
 
     if (this.ball.y > this.canvas.height - this.lineHeight)
       {this.ball.y -= this.fallRate };
+      console.log(this.ball.y);
     this.stage.update();
+    this.score = Math.floor(createjs.Ticker.getTime(true)/100);
+    this.increaseFrequency();
   }
 
 
@@ -230,17 +237,34 @@ class Game{
   }
 
   increaseFrequency(){
-    if (createjs.Ticker.getTicks() > 1000 ) { this.generationRate = 35}
-    if (createjs.Ticker.getTicks() > 2000 ) { this.generationRate = 30}
-    if (createjs.Ticker.getTicks() > 5000 ) { this.generationRate = 35}
-    if (createjs.Ticker.getTicks() > 6000 ) { this.generationRate = 20}
-    if (createjs.Ticker.getTicks() > 7000 ) { this.generationRate = 10}
+    if (createjs.Ticker.getTicks(true) > 1000 ) { this.generationRate = 35}
+    if (createjs.Ticker.getTicks(true) > 2000 ) { this.generationRate = 30}
+    if (createjs.Ticker.getTicks(true) > 5000 ) { this.generationRate = 35}
+    if (createjs.Ticker.getTicks(true) > 6000 ) { this.generationRate = 20}
+    if (createjs.Ticker.getTicks(true) > 7000 ) { this.generationRate = 10}
   }
 
   reset(){
     this.stage.removeAllChildren();
     this.ball = new Ball(this.canvas.width).createBall();
     this.stage.addChild(this.ball);
+    this.xLine = [];
+    this.yLine = undefined;
+    this.score = 0;
+  }
+
+  checkGameOver(){
+    if (this.ball.y <= this.ball._bounds.width && this.yLine <= this.ball.y + this.ball._bounds.width) {
+      this.reset();
+      let modal = document.getElementById("modal");
+      modal.style.display = "block";
+      createjs.Ticker.removeAllEventListeners();
+      createjs.Ticker.paused = true;
+    }
+  }
+
+  getScore(){
+    return this.score;
   }
 
 }
@@ -266,7 +290,7 @@ class Block{
 
   createBlock(xPos){
     let block = new createjs.Shape();
-    block.graphics.beginFill("#000000").drawRect(0,0, this.width, this.height);
+    block.graphics.beginFill("#FFFFFF").drawRoundRect(0,0, this.width, this.height, 3);
     block.setBounds(-(this.width/2),-(this.height/2),this.width, this.height);
     block.x = xPos;
     //
@@ -329,32 +353,41 @@ document.addEventListener("DOMContentLoaded", function(){
 
   //get buttons
   const reset = document.getElementById("restart");
+  const resume = document.getElementById("continue");
+
   const hardReset = () => {
+    createjs.Ticker.reset();
     game.reset();
-    createjs.Ticker.off("tick", beginGame);
     createjs.Ticker.paused = false;
     beginGame = createjs.Ticker.on("tick", game.start);
     modal.style.display = "none";
   }
   reset.onclick = hardReset;
 
-  //allow reset by key on pause
-  key("r", () => {
+  const resumeGame = () => {
+    createjs.Ticker.paused = createjs.Ticker.paused ? false : true;
     if (createjs.Ticker.paused) {
-      game.reset();
       createjs.Ticker.off("tick", beginGame);
-      createjs.Ticker.paused = false;
-      beginGame = createjs.Ticker.on("tick", game.start);
-      modal.style.display = "none";
+    } else {
+      beginGame = createjs.Ticker.on("tick", beginGame);
     }
-  })
+    modal.style.display = "none";
+  }
+  resume.onclick = resumeGame;
 
-  //pause and how modal on certain keys
+  //allow reset by keypress on pause
+  key("r", () => {
+    if (createjs.Ticker.paused) { hardReset();}
+  });
+
+
+
+  //pause and show modal on certain keys
   key('up, space, w, esc', () => {
     createjs.Ticker.paused = createjs.Ticker.paused ? false : true;
     if (createjs.Ticker.paused) {
       createjs.Ticker.off("tick", beginGame);
-      score.innerHTML = createjs.Ticker.getTicks();
+      score.innerHTML = game.getScore();
       modal.style.display = "block";
     } else {
       beginGame = createjs.Ticker.on("tick", beginGame);
