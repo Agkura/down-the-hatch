@@ -23,13 +23,13 @@ time, mark, audio, video {
   display: flex;
   display: -webkit-flex;
   -webkit-justify-content: center;
-	height: 100%;
-	background-image: url("../docs/ti84.svg");
-	background-position: center;
-	background-repeat: no-repeat;
 }
 
 #hatch {
 	border: 1px solid black;
-	margin: 50px;
+	margin: 25px;
+	border-radius: 8px;
+	-webkit-box-shadow: 0px 0px 4px 1px red inset;
+	-moz-box-shadow: 0px 0px 4px 1px red inset;
+	box-shadow: 0px 0px 2px 4px red inset;
 }
