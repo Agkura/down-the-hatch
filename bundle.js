@@ -73,12 +73,14 @@
 class Ball{ // make static or js object
   constructor(width){
     this.width = width;
-    this.radius = Math.floor(width * 0.02 / 10) * 10;
+    this.radius = 5;
+    console.log(this.radius);
+    console.log(width * 0.02 / 10);
   }
   createBall(){
     let ball = new createjs.Shape()
     let container = new createjs.Container();
-    ball.graphics.beginFill("#FFFFFF").drawCircle(0, 0, this.radius, this.radius)
+    ball.graphics.beginFill("#000000").drawCircle(0, 0, this.radius, this.radius)
     container.addChild(ball);
     container.x = this.width/2;
     container.y = 0;
@@ -112,8 +114,8 @@ class Game{
     this.score = 0;
 
     //Keep the same speed across any window size
-    this.fallRate = Math.floor(this.stage.canvas.height * 0.008);
-    this.stepRate = Math.floor(this.stage.canvas.width * 0.01);
+    this.fallRate = Math.floor(this.stage.canvas.height * 0.01);
+    this.stepRate = Math.floor(this.stage.canvas.width * 0.015);
 
     this.start = this.start.bind(this);
     this.generateWall = this.generateWall.bind(this);
@@ -157,9 +159,8 @@ class Game{
 
     if (this.ball.y > this.canvas.height - this.lineHeight)
       {this.ball.y -= this.fallRate };
-      console.log(this.ball.y);
+
     this.stage.update();
-    this.score = Math.floor(createjs.Ticker.getTime(true)/100);
     this.increaseFrequency();
   }
 
@@ -224,9 +225,10 @@ class Game{
         }
 
         container.y -= this.fallRate
-        if (container.y < -500) {
+        if (container.y < -100) {
           this.stage.removeChild(container);
           this.walls.shift();
+          this.score += Math.floor(this.generationRate) ;
         }
       })
     }
@@ -237,11 +239,11 @@ class Game{
   }
 
   increaseFrequency(){
-    if (createjs.Ticker.getTicks(true) > 1000 ) { this.generationRate = 35}
-    if (createjs.Ticker.getTicks(true) > 2000 ) { this.generationRate = 30}
-    if (createjs.Ticker.getTicks(true) > 5000 ) { this.generationRate = 35}
-    if (createjs.Ticker.getTicks(true) > 6000 ) { this.generationRate = 20}
-    if (createjs.Ticker.getTicks(true) > 7000 ) { this.generationRate = 10}
+    if (this.score > 1000 ) { this.generationRate = 35}
+    if (this.score > 2000 ) { this.generationRate = 30}
+    if (this.score > 5000 ) { this.generationRate = 35}
+    if (this.score > 6000 ) { this.generationRate = 20}
+    if (this.score > 7000 ) { this.generationRate = 10}
   }
 
   reset(){
@@ -290,7 +292,7 @@ class Block{
 
   createBlock(xPos){
     let block = new createjs.Shape();
-    block.graphics.beginFill("#FFFFFF").drawRoundRect(0,0, this.width, this.height, 3);
+    block.graphics.beginFill("#000000").drawRoundRect(0,0, this.width, this.height, 3);
     block.setBounds(-(this.width/2),-(this.height/2),this.width, this.height);
     block.x = xPos;
     //
@@ -334,11 +336,13 @@ const Ball = __webpack_require__(0);
 
 document.addEventListener("DOMContentLoaded", function(){
   const hatch = document.getElementById("hatch");
-  hatch.height = 500;
-  hatch.width = 800;
+  hatch.height = 230;
+  hatch.width = 350;
 
   const ball = new Ball(hatch.width).createBall();
   const game = new Game(hatch, ball);
+
+  createjs.Ticker.setFPS(65);
 
   //set score
   let score = document.getElementsByClassName("score-text")[0];
@@ -383,7 +387,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
 
   //pause and show modal on certain keys
-  key('up, space, w, esc', () => {
+  key('up, space, w, esc', (event) => {
     createjs.Ticker.paused = createjs.Ticker.paused ? false : true;
     if (createjs.Ticker.paused) {
       createjs.Ticker.off("tick", beginGame);
@@ -407,7 +411,6 @@ document.addEventListener("DOMContentLoaded", function(){
         }
     }
   }
-  createjs.Ticker.setFPS(60);
 })
 
 
