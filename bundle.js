@@ -1,0 +1,327 @@
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// identity function for calling harmony imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports) {
+
+class Ball{ // make static or js object
+  constructor(width){
+    this.width = width;
+    this.radius = Math.floor(width * 0.02 / 10) * 10;
+  }
+  createBall(){
+    let ball = new createjs.Shape()
+    let container = new createjs.Container();
+    ball.graphics.beginFill("#ff0000").drawCircle(0, 0, this.radius, this.radius)
+    container.addChild(ball);
+    container.x = this.width/2;
+    ball.setBounds(-this.radius/2,-this.radius/2, this.radius, this.radius);
+    container.setBounds(-this.radius/2,-this.radius/2, this.radius, this.radius);
+    return container;
+  }
+}
+
+module.exports = Ball;
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Ball = __webpack_require__(0);
+const Block = __webpack_require__(5);
+
+
+
+class Game{
+  constructor(canvas, ball){
+    this.canvas = canvas;
+    this.stage = new createjs.Stage(canvas);
+    this.ball = ball;
+    this.stage.addChild(this.ball);
+    this.xLine = [];
+    this.walls = [];
+    this.lineHeight;
+    this.yLine;
+
+    //Keep the same speed across any window size
+    this.fallRate = Math.floor(this.stage.canvas.height * 0.008);
+    this.stepRate = Math.floor(this.stage.canvas.width * 0.009);
+
+    this.start = this.start.bind(this);
+    this.generateWall = this.generateWall.bind(this);
+  }
+
+  start(){
+
+    this.ball.y += this.fallRate;
+    //Ball would cross through a block in the line
+    if (this.collideBrick()){
+      this.ball.y -= this.fallRate * 2
+    }
+    this.stage.update();
+
+    if (key.isPressed("d") || key.isPressed(39))
+      {this.ball.x += this.stepRate;}
+    if (key.isPressed("a") || key.isPressed(37))
+      {this.ball.x -= this.stepRate;}
+
+    //differentiate from hitting left-side of block vs the right side of the block
+    if (this.collideRightWall() || (this.collideBrick() && (key.isPressed("d") || key.isPressed(39))))
+      { this.ball.x -= this.stepRate }
+
+    this.stage.update();
+    if (this.collideLeftWall() || (this.collideBrick() && (key.isPressed("a") || key.isPressed(37))))
+      { this.ball.x += this.stepRate }
+
+    this.stage.update();
+
+
+    if (createjs.Ticker.getTicks() % 40 === 0) {
+      this.generateWall();
+    }
+    this.stage.update();
+
+    this.moveWall();
+    this.stage.update();
+
+    if (this.ball.y > this.canvas.height - this.lineHeight)
+      {this.ball.y -= this.fallRate };
+    this.stage.update();
+  }
+
+
+  generateWall(){
+    let wall = new Block(this.canvas.width, this.canvas.height).createLine();
+    this.lineHeight = wall.children[0]._bounds.height;
+    this.walls.push(wall);
+    this.stage.addChild(wall);
+    this.stage.update();
+  }
+
+  collideRightWall(){
+    if (this.ball.x >= this.canvas.width + this.ball._bounds.x){
+      return true;
+    }
+    return false;
+  }
+
+
+  collideLeftWall(){
+    if (this.ball.x <= -this.ball._bounds.x){
+      return true;
+    }
+    return false;
+  }
+
+  collideXRange(){
+    let xCross = false;
+    this.xLine.forEach( array => {
+      if ( (this.ball.x + this.ball._bounds.x >= array[0] || (this.ball.x - this.ball._bounds.x >= array[0]) )&& (this.ball.x + this.ball._bounds.x <= array[1] || (this.ball.x - this.ball._bounds.x <=array[1]) ) ) { xCross = true}
+    })
+    return xCross
+  }
+
+  collideBrick(){
+    if ( ((this.ball.y + this.ball._bounds.y >= this.yLine)  || (this.ball.y - this.ball._bounds.y >= this.yLine)) && ((this.ball.y + this.ball._bounds.y <= this.yLine + this.lineHeight) || (this.ball.y - this.ball._bounds.y <= this.yLine + this.lineHeight))){
+      if (this.collideXRange()){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  collideBrickSlide(){
+    if (this.ball.y > this.yLine && this.ball.y < this.yLine + this.lineHeight){
+      if (this.collideXRange()){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  moveWall(){
+    let setXCross = true;
+    if (!(this.ball.y <= 0)){
+      this.walls.forEach( (container, idx) => {
+        if (container.parent != null &&( this.ball.y < container.y )&& setXCross) {
+          this.setXLines(container);
+          this.yLine = container.y;
+          setXCross = false;
+        }
+        container.y -= this.fallRate
+        if (container.y < -500) {
+          this.stage.removeChild(container);
+          this.walls.shift();
+        }
+      })
+    }
+  }
+
+
+  setXLines(container){
+    this.xLine = container.children.map( el => [el.x, el.x + el._bounds.width]);
+  }
+
+}
+
+module.exports = Game;
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Game = __webpack_require__(1);
+const Ball = __webpack_require__(0);
+
+
+
+document.addEventListener("DOMContentLoaded", function(){
+  const hatch = document.getElementById("hatch");
+  hatch.height = Math.floor(window.innerHeight * 0.8);
+  hatch.width = Math.floor(window.innerWidth * 0.6 / 10) * 10;
+
+  const ball = new Ball(hatch.width).createBall();
+  const game = new Game(hatch, ball);
+
+  //Set listener for pause
+  let beginGame = createjs.Ticker.on("tick", game.start);
+
+  key('up', () => {
+    createjs.Ticker.paused = createjs.Ticker.paused ? false : true;
+    if (createjs.Ticker.paused) {
+      createjs.Ticker.off("tick", beginGame);
+      console.log("turn off");
+    } else {
+      beginGame = createjs.Ticker.on("tick", beginGame);
+      console.log("turn on");
+    }
+  });
+
+  createjs.Ticker.setFPS(60);
+})
+
+
+/***/ }),
+/* 3 */,
+/* 4 */,
+/* 5 */
+/***/ (function(module, exports) {
+
+class Block{
+  constructor(width, height){
+    this.canvasWidth = width;
+    this.canvasHeight = height;
+    this.width = Math.floor(width * 0.04);
+    this.height = Math.floor(width * 0.02);
+    this.numBlocks = Math.floor(this.canvasWidth/this.width);
+
+    this.createBlock = this.createBlock.bind(this);
+    this.createLine = this.createLine.bind(this);
+  }
+
+  createBlock(xPos){
+    let block = new createjs.Shape();
+    block.graphics.beginFill("#000000").drawRect(0,0, this.width, this.height);
+    block.setBounds(-(this.width/2),-(this.height/2),this.width, this.height);
+    block.x = xPos;
+    //
+    // block.y = this.canvasHeight - this.height;
+    return block;
+  }
+
+  createLine(){ //static or line class
+    let container = new createjs.Container();
+    const randomizer = [true,false,true, true, true, true, true];
+    for(let i = 0; i < this.numBlocks; i++){
+      if (randomizer[Math.floor(Math.random() * randomizer.length)]){
+        let xPos = this.width * i;
+        container.addChild(this.createBlock(xPos));
+      }
+    }
+    container.setBounds(null, null, null, this.height)
+    container.y = this.canvasHeight;
+    return container;
+  }
+
+  randomizer(){
+    let random = [];
+    for(let i = 0; i<this.numBlocks;i++){ random.push(i) }
+    return
+  }
+
+}
+
+module.exports = Block;
+
+
+/***/ })
+/******/ ]);
+//# sourceMappingURL=bundle.js.map
