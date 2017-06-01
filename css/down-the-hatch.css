@@ -24,8 +24,12 @@ time, mark, audio, video {
   display: -webkit-flex;
   -webkit-justify-content: center;
 	height: 100%;
+	background-image: url("../docs/ti84.svg");
+	background-position: center;
+	background-repeat: no-repeat;
 }
 
 #hatch {
 	border: 1px solid black;
+	margin: 50px;
 }
