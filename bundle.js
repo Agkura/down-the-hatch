@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -81,7 +81,7 @@ class Ball{ // make static or js object
     ball.graphics.beginFill("#ff0000").drawCircle(0, 0, this.radius, this.radius)
     container.addChild(ball);
     container.x = this.width/2;
-    ball.setBounds(-this.radius/2,-this.radius/2, this.radius, this.radius);
+    // ball.setBounds(-this.radius/2,-this.radius/2, this.radius, this.radius);
     container.setBounds(-this.radius/2,-this.radius/2, this.radius, this.radius);
     return container;
   }
@@ -95,9 +95,7 @@ module.exports = Ball;
 /***/ (function(module, exports, __webpack_require__) {
 
 const Ball = __webpack_require__(0);
-const Block = __webpack_require__(5);
-
-
+const Block = __webpack_require__(2);
 
 class Game{
   constructor(canvas, ball){
@@ -109,14 +107,16 @@ class Game{
     this.walls = [];
     this.lineHeight;
     this.yLine;
+    this.generationRate = 40;
 
     //Keep the same speed across any window size
     this.fallRate = Math.floor(this.stage.canvas.height * 0.008);
-    this.stepRate = Math.floor(this.stage.canvas.width * 0.009);
+    this.stepRate = Math.floor(this.stage.canvas.width * 0.01);
 
     this.start = this.start.bind(this);
     this.generateWall = this.generateWall.bind(this);
   }
+
 
   start(){
 
@@ -143,7 +143,7 @@ class Game{
     this.stage.update();
 
 
-    if (createjs.Ticker.getTicks() % 40 === 0) {
+    if (createjs.Ticker.getTicks() % this.generationRate === 0) {
       this.generateWall();
     }
     this.stage.update();
@@ -189,7 +189,7 @@ class Game{
   }
 
   collideBrick(){
-    if ( ((this.ball.y + this.ball._bounds.y >= this.yLine)  || (this.ball.y - this.ball._bounds.y >= this.yLine)) && ((this.ball.y + this.ball._bounds.y <= this.yLine + this.lineHeight) || (this.ball.y - this.ball._bounds.y <= this.yLine + this.lineHeight))){
+    if ( ((this.ball.y + this.ball._bounds.height >= this.yLine)  || (this.ball.y >= this.yLine)) && ((this.ball.y + this.ball._bounds.height <= this.yLine + this.lineHeight) || (this.ball.y  <= this.yLine + this.lineHeight))){
       if (this.collideXRange()){
         return true;
       }
@@ -215,6 +215,7 @@ class Game{
           this.yLine = container.y;
           setXCross = false;
         }
+
         container.y -= this.fallRate
         if (container.y < -500) {
           this.stage.removeChild(container);
@@ -224,9 +225,22 @@ class Game{
     }
   }
 
-
   setXLines(container){
     this.xLine = container.children.map( el => [el.x, el.x + el._bounds.width]);
+  }
+
+  increaseFrequency(){
+    if (createjs.Ticker.getTicks() > 1000 ) { this.generationRate = 35}
+    if (createjs.Ticker.getTicks() > 2000 ) { this.generationRate = 30}
+    if (createjs.Ticker.getTicks() > 5000 ) { this.generationRate = 35}
+    if (createjs.Ticker.getTicks() > 6000 ) { this.generationRate = 20}
+    if (createjs.Ticker.getTicks() > 7000 ) { this.generationRate = 10}
+  }
+
+  reset(){
+    this.stage.removeAllChildren();
+    this.ball = new Ball(this.canvas.width).createBall();
+    this.stage.addChild(this.ball);
   }
 
 }
@@ -236,43 +250,6 @@ module.exports = Game;
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Game = __webpack_require__(1);
-const Ball = __webpack_require__(0);
-
-
-
-document.addEventListener("DOMContentLoaded", function(){
-  const hatch = document.getElementById("hatch");
-  hatch.height = Math.floor(window.innerHeight * 0.8);
-  hatch.width = Math.floor(window.innerWidth * 0.6 / 10) * 10;
-
-  const ball = new Ball(hatch.width).createBall();
-  const game = new Game(hatch, ball);
-
-  //Set listener for pause
-  let beginGame = createjs.Ticker.on("tick", game.start);
-
-  key('up', () => {
-    createjs.Ticker.paused = createjs.Ticker.paused ? false : true;
-    if (createjs.Ticker.paused) {
-      createjs.Ticker.off("tick", beginGame);
-      console.log("turn off");
-    } else {
-      beginGame = createjs.Ticker.on("tick", beginGame);
-      console.log("turn on");
-    }
-  });
-
-  createjs.Ticker.setFPS(60);
-})
-
-
-/***/ }),
-/* 3 */,
-/* 4 */,
-/* 5 */
 /***/ (function(module, exports) {
 
 class Block{
@@ -301,7 +278,7 @@ class Block{
     let container = new createjs.Container();
     const randomizer = [true,false,true, true, true, true, true];
     for(let i = 0; i < this.numBlocks; i++){
-      if (randomizer[Math.floor(Math.random() * randomizer.length)]){
+      if (randomizer[Math.floor(Math.random() * randomizer.length)] && container.children.length != (this.numBlocks - 1)){
         let xPos = this.width * i;
         container.addChild(this.createBlock(xPos));
       }
@@ -320,6 +297,85 @@ class Block{
 }
 
 module.exports = Block;
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Game = __webpack_require__(1);
+const Ball = __webpack_require__(0);
+
+
+
+document.addEventListener("DOMContentLoaded", function(){
+  const hatch = document.getElementById("hatch");
+  hatch.height = 500;
+  hatch.width = 800;
+
+  const ball = new Ball(hatch.width).createBall();
+  const game = new Game(hatch, ball);
+
+  //set score
+  let score = document.getElementsByClassName("score-text")[0];
+
+
+  //get modals for pause
+  const modal = document.getElementById("modal");
+  const modalContent = document.getElementById("modal-content");
+
+  //Set listener for pause
+  let beginGame = createjs.Ticker.on("tick", game.start);
+
+  //get buttons
+  const reset = document.getElementById("restart");
+  const hardReset = () => {
+    game.reset();
+    createjs.Ticker.off("tick", beginGame);
+    createjs.Ticker.paused = false;
+    beginGame = createjs.Ticker.on("tick", game.start);
+    modal.style.display = "none";
+  }
+  reset.onclick = hardReset;
+
+  //allow reset by key on pause
+  key("r", () => {
+    if (createjs.Ticker.paused) {
+      game.reset();
+      createjs.Ticker.off("tick", beginGame);
+      createjs.Ticker.paused = false;
+      beginGame = createjs.Ticker.on("tick", game.start);
+      modal.style.display = "none";
+    }
+  })
+
+  //pause and how modal on certain keys
+  key('up, space, w, esc', () => {
+    createjs.Ticker.paused = createjs.Ticker.paused ? false : true;
+    if (createjs.Ticker.paused) {
+      createjs.Ticker.off("tick", beginGame);
+      score.innerHTML = createjs.Ticker.getTicks();
+      modal.style.display = "block";
+    } else {
+      beginGame = createjs.Ticker.on("tick", beginGame);
+      modal.style.display = "none";
+    }
+  });
+
+  //allow user to escape modal and continue game on outside click
+  window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+        createjs.Ticker.paused = createjs.Ticker.paused ? false : true;
+        if (createjs.Ticker.paused) {
+          createjs.Ticker.off("tick", beginGame);
+        } else {
+          beginGame = createjs.Ticker.on("tick", beginGame);
+        }
+    }
+  }
+  createjs.Ticker.setFPS(60);
+})
 
 
 /***/ })
