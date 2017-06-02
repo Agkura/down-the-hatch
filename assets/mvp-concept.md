@@ -12,7 +12,6 @@ The goal is to simply move left or right and drop through a series of breaks tha
 - [ ] The game will open with an instructional modal, short and concise for those who know not the joy of literature.
 - [ ] Use either &#8592;/&#8594; keys or `a`/`d` keys to play.
 - [ ] Temporary high score show between rounds.
-- [ ] Background music (off by default) with toggle.
 - [ ] Production README when complete.
 
 
