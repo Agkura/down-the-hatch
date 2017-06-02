@@ -125,7 +125,6 @@ class Game{
 
   start(){
     this.checkGameOver();
-
     this.ball.y += this.fallRate;
     //Ball would cross through a block in the line
     if (this.collideBrick()){
@@ -270,6 +269,10 @@ class Game{
     return this.score;
   }
 
+  gameOver(){
+    return Boolean(this.stage.children.length <= 1 && this.yLine === undefined );
+  }
+
 }
 
 module.exports = Game;
@@ -353,13 +356,17 @@ document.addEventListener("DOMContentLoaded", function(){
   //set score
   let score = document.getElementsByClassName("score")[0];
 
+  //get modal options
+  let paused = document.getElementsByClassName("paused")[0];
+  let newGame = document.getElementsByClassName("new-game")[0];
+  let gameOver = document.getElementsByClassName("game-over")[0];
 
   //get modals for pause
   const modal = document.getElementById("modal");
   const modalContent = document.getElementById("modal-content");
 
   //Set listener for pause
-  let beginGame = createjs.Ticker.on("tick", game.start);
+  // let beginGame = createjs.Ticker.on("tick", game.start);
 
   //get buttons
   const reset = document.getElementById("restart");
@@ -381,7 +388,7 @@ document.addEventListener("DOMContentLoaded", function(){
     } else {
       beginGame = createjs.Ticker.on("tick", beginGame);
     }
-    modal.style.display = "none";
+    toggleOff();
   }
   resume.onclick = resumeGame;
 
@@ -397,7 +404,6 @@ document.addEventListener("DOMContentLoaded", function(){
     createjs.Ticker.paused = createjs.Ticker.paused ? false : true;
     if (createjs.Ticker.paused) {
       createjs.Ticker.off("tick", beginGame);
-      score.innerHTML = game.getScore();
       toggleOff();
     } else {
       beginGame = createjs.Ticker.on("tick", beginGame);
@@ -414,6 +420,9 @@ document.addEventListener("DOMContentLoaded", function(){
     right.style.opacity = 0.3;
     right.style.zIndex = 0;
     background.style.backgroundColor = "white";
+    gameOver.style.display = "none";
+    paused.style.display = "none";
+    newGame.style.display = "none";
 }
 
   const toggleOff = () => {
@@ -426,6 +435,11 @@ document.addEventListener("DOMContentLoaded", function(){
     right.style.zIndex = 10;
     background.style.backgroundColor = "grey";
     background.style.opacity = 0.3;
+    if (game.gameOver()){
+      gameOver.style.display = "block";
+    } else {
+      paused.style.display = "block";
+    }
   }
   window.toggleOff = toggleOff;
 
