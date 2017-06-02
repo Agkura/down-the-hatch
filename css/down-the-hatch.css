@@ -117,9 +117,6 @@ p {
 	width: 100%;
 	top: 0px;
 	bottom: 0px;
-	/*-webkit-box-shadow: 2px 1px 10px 10px grey;
-	-moz-box-shadow: 2px 1px 10px 10px grey;
-	box-shadow: 2px 1px 10px 10px grey;*/
 	z-index: 1;
 	display: flex;
 	display: -webkit-flex;
@@ -135,9 +132,6 @@ p {
 	width: 100%;
 	top: 0px;
 	bottom: 0px;
-	/*-webkit-box-shadow: 1px 1px 10px 10px grey;
-	-moz-box-shadow: 1px 1px 10px 10px grey;
-	box-shadow: 1px 1px 10px 10px grey;*/
 	opacity: 0.3;
 	display: flex;
 	display: -webkit-flex;
@@ -152,7 +146,7 @@ p {
 	display: -webkit-flex;
 	display: flex;
 
-	max-width: 1500px;
+	width: 100%;
 	height: 100%;
 	background-color: white;
 	margin: 0 auto;
@@ -219,13 +213,3 @@ h2 {
 .break {
 	padding-bottom: 30px;
 }
-
-/*.background-fill{
-	opacity: 0.3;
-	background-color: grey;
-	position: absolute;
-	top: 0px;
-	bottom: 0px;
-	width: 500px;
-	margin: 0 auto;
-}*/
