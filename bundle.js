@@ -112,10 +112,13 @@ class Game{
     this.yLine;
     this.generationRate = 40;
     this.score = 0;
+    this.started = false;
 
     //Keep the same speed across any window size
     this.fallRate = Math.floor(this.stage.canvas.height * 0.01);
     this.stepRate = Math.floor(this.stage.canvas.width * 0.015);
+
+    this.showScore = document.getElementsByClassName("score")[0];
 
     this.start = this.start.bind(this);
     this.generateWall = this.generateWall.bind(this);
@@ -124,8 +127,11 @@ class Game{
 
 
   start(){
+    this.started = true;
     this.checkGameOver();
+
     this.ball.y += this.fallRate;
+
     //Ball would cross through a block in the line
     if (this.collideBrick()){
       this.ball.y -= this.fallRate * 2
@@ -140,11 +146,10 @@ class Game{
     //differentiate from hitting left-side of block vs the right side of the block
     if (this.collideRightWall() || (this.collideBrick() && (key.isPressed("d") || key.isPressed(39))))
       { this.ball.x -= this.stepRate }
-
     this.stage.update();
+
     if (this.collideLeftWall() || (this.collideBrick() && (key.isPressed("a") || key.isPressed(37))))
       { this.ball.x += this.stepRate }
-
     this.stage.update();
 
 
@@ -158,8 +163,8 @@ class Game{
 
     if (this.ball.y > this.canvas.height - this.lineHeight)
       {this.ball.y -= this.fallRate };
-
     this.stage.update();
+
     this.increaseFrequency();
   }
 
@@ -227,7 +232,8 @@ class Game{
         if (container.y < -100) {
           this.stage.removeChild(container);
           this.walls.shift();
-          this.score += Math.floor(this.generationRate) ;
+          this.score += Math.floor(this.generationRate);
+          this.showScore.innerHTML = this.score;
         }
       })
     }
@@ -270,7 +276,11 @@ class Game{
   }
 
   gameOver(){
-    return Boolean(this.stage.children.length <= 1 && this.yLine === undefined );
+    return Boolean(this.stage.children.length <= 1 && this.yLine === undefined && createjs.Ticker.hasEventListener("tick"));
+  }
+
+  gameStarted(){
+    return this.started;
   }
 
 }
@@ -353,8 +363,8 @@ document.addEventListener("DOMContentLoaded", function(){
   const right = document.getElementsByClassName("right")[0];
   const background = document.getElementsByClassName("background-fill")[0];
 
-  //set score
-  let score = document.getElementsByClassName("score")[0];
+  // //set score
+  // let score = document.getElementsByClassName("score")[0];
 
   //get modal options
   let paused = document.getElementsByClassName("paused")[0];
@@ -365,52 +375,7 @@ document.addEventListener("DOMContentLoaded", function(){
   const modal = document.getElementById("modal");
   const modalContent = document.getElementById("modal-content");
 
-  //Set listener for pause
-  // let beginGame = createjs.Ticker.on("tick", game.start);
-
-  //get buttons
-  const reset = document.getElementById("restart");
-  const resume = document.getElementById("continue");
-
-  const hardReset = () => {
-    createjs.Ticker.reset();
-    game.reset();
-    createjs.Ticker.paused = false;
-    beginGame = createjs.Ticker.on("tick", game.start);
-    toggleOn();
-  }
-  reset.onclick = hardReset;
-
-  const resumeGame = () => {
-    createjs.Ticker.paused = createjs.Ticker.paused ? false : true;
-    if (createjs.Ticker.paused) {
-      createjs.Ticker.off("tick", beginGame);
-    } else {
-      beginGame = createjs.Ticker.on("tick", beginGame);
-    }
-    toggleOff();
-  }
-  resume.onclick = resumeGame;
-
-  //allow reset by keypress on pause
-  key("r", () => {
-    if (createjs.Ticker.paused) { hardReset();}
-  });
-
-
-
-  //pause and show modal on certain keys
-  key('up, space, w, esc', (event) => {
-    createjs.Ticker.paused = createjs.Ticker.paused ? false : true;
-    if (createjs.Ticker.paused) {
-      createjs.Ticker.off("tick", beginGame);
-      toggleOff();
-    } else {
-      beginGame = createjs.Ticker.on("tick", beginGame);
-      toggleOn();
-    }
-  });
-
+  //turn off modals
   const toggleOn = () => {
     modal.style.display = "none";
     left.style.backgroundColor = "black";
@@ -423,8 +388,9 @@ document.addEventListener("DOMContentLoaded", function(){
     gameOver.style.display = "none";
     paused.style.display = "none";
     newGame.style.display = "none";
-}
+  }
 
+  //turn on modals
   const toggleOff = () => {
     modal.style.display = "block";
     left.style.backgroundColor = "white";
@@ -437,24 +403,56 @@ document.addEventListener("DOMContentLoaded", function(){
     background.style.opacity = 0.3;
     if (game.gameOver()){
       gameOver.style.display = "block";
+    } else if (!game.gameStarted()){
+      newGame.style.display = "block";
     } else {
       paused.style.display = "block";
     }
   }
+
+  // give access to off toggle to Game class for gameOver instance
   window.toggleOff = toggleOff;
 
-  //allow user to escape modal and continue game on outside click
-  window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-        createjs.Ticker.paused = createjs.Ticker.paused ? false : true;
-        if (createjs.Ticker.paused) {
-          createjs.Ticker.off("tick", beginGame);
-        } else {
-          beginGame = createjs.Ticker.on("tick", beginGame);
-        }
+  // begin game in off state
+  toggleOff();
+  let beginGame
+
+  //Set listener for pause
+  key('s, down', () => {
+    if (!game.gameStarted()) {
+    toggleOn();
+    beginGame = createjs.Ticker.on("tick", game.start);
     }
+  })
+
+  const hardReset = () => {
+    createjs.Ticker.reset();
+    game.reset();
+    createjs.Ticker.paused = false;
+    beginGame = createjs.Ticker.on("tick", game.start);
+    toggleOn();
   }
+
+  //allow reset by keypress on pause
+  key("r", () => {
+    if (createjs.Ticker.paused && game.gameStarted()) {
+      hardReset();
+    }
+  });
+
+  //pause and show modal on certain keys
+  key('up, space, w, esc', (event) => {
+    if (game.gameStarted()){
+      createjs.Ticker.paused = createjs.Ticker.paused ? false : true;
+      if (createjs.Ticker.paused) {
+        createjs.Ticker.off("tick", beginGame);
+        toggleOff();
+      } else {
+        beginGame = createjs.Ticker.on("tick", beginGame);
+        toggleOn();
+      }
+    }
+  });
 })
 
 

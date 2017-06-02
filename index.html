@@ -58,7 +58,8 @@
 
       <div class="right">
         <ul class="instructions">
-          <li class=""
+          <li>SCORE</li>
+          <li class="score"></li>
         </ul>
       </div>
 
@@ -67,14 +68,28 @@
     <div id="modal">
       <div id="modal-content">
           <div class="pause-screen">
-            <h2 class="paused">Paused</h2>
-            <h2 class="game-over">GameOver</h2>
-            <h2 class="new-game">New Game</h2>
+            <div class="paused">
+              <h2>Paused</h2>
+              <div class="start">
+                <p>Hit 'R' to restart</p>
+                <p>Hit 'Space', 'W', 'ESC' or '&uarr;' to continue</p>
+              </div>
+            </div>
+            <div class="new-game">
+              <h2>New Game</h2>
+              <div class="start">
+                <p>Hit &darr; or 'S' to start</p>
+              </div>
+            </div>
+            <div class="game-over">
+              <h2>Game Over</h2>
+              <div class="start">
+                <p>Hit 'R' to try again</p>
+                <p>Hit '&#8984; + W' to run away</p>
+              </div>
+            </div>
           </div>
-          <div class="buttons">
-            <button id="restart">(R)estart</button>
-            <button id="continue">Continue</button>
-          </div>
+
       </div>
     </div>
   </body>
