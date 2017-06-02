@@ -27,14 +27,15 @@ time, mark, audio, video {
 	background-image: url("../docs/ti84.svg");
 	background-position: top;
 	background-repeat: no-repeat;
-	background-size: cover;
+	background-size: auto;
 	background-clip: border-box;
 	margin: 0 auto;
-	width: 500px;
-	height: 600px;
+	min-width: 500px;
+	min-height: 600px;
+	padding: 0 20px;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
-
+	border-radius: 10px;
 }
 
 #hatch {
@@ -50,7 +51,7 @@ time, mark, audio, video {
 #modal {
     display: none;
     position: fixed;
-    z-index: 1;
+    z-index: 5;
     left: 0;
     top: 0;
     width: 100%;
@@ -82,14 +83,6 @@ time, mark, audio, video {
 	to {opacity: 1}
 }
 
-.three {
-	max-width: 1000px;
-	margin: 0 auto;
-}
-
-.two {
-	max-height: 800px;
-}
 
 .score-block{
 	display: flex;
@@ -103,8 +96,8 @@ time, mark, audio, video {
 	display: -webkit-flex;
 	flex-direction: column;
 	-webkit-flex-direction: column;
-	/*justify-content: center;
-	-webkit-justify-content: center;*/
+	justify-content: center;
+	-webkit-justify-content: center;
 	align-items: center;
 	-webkit-align-items: center;
 }
@@ -114,4 +107,37 @@ time, mark, audio, video {
 	-webkit-display: flex;
 	justify-content: space-around;
 	-webkit-justify-content: space-around;
+}
+
+.left {
+	width: 100%;
+	top: 0px;
+	bottom: 0px;
+	-webkit-box-shadow: 2px 1px 10px 10px grey;
+	-moz-box-shadow: 2px 1px 10px 10px grey;
+	box-shadow: 2px 1px 10px 10px grey;
+	background-color: white;
+	z-index: 1;
+}
+
+.right {
+	width: 100%;
+	top: 0px;
+	bottom: 0px;
+	-webkit-box-shadow: 1px 1px 10px 10px grey;
+	-moz-box-shadow: 1px 1px 10px 10px grey;
+	box-shadow: 1px 1px 10px 10px grey;
+	background-color: white;
+}
+
+.main {
+	display: -webkit-flex;
+	display: flex;
+
+	width: 100%;
+	height: 100%;
+	background-color: white;
+}
+
+body {
 }
