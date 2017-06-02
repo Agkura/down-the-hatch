@@ -28,7 +28,7 @@ p {
   display: flex;
   display: -webkit-flex;
   -webkit-justify-content: center;
-	background-image: url("../docs/ti-84.svg");
+	background-image: url("../assets/ti-84.svg");
 	background-position: top;
 	background-repeat: no-repeat;
 	background-size: cover;
