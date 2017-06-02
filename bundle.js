@@ -241,9 +241,9 @@ class Game{
   increaseFrequency(){
     if (this.score > 1000 ) { this.generationRate = 35}
     if (this.score > 2000 ) { this.generationRate = 30}
-    if (this.score > 5000 ) { this.generationRate = 35}
-    if (this.score > 6000 ) { this.generationRate = 20}
-    if (this.score > 7000 ) { this.generationRate = 10}
+    if (this.score > 3000 ) { this.generationRate = 35}
+    if (this.score > 4000 ) { this.generationRate = 20}
+    if (this.score > 5000 ) { this.generationRate = 10}
   }
 
   reset(){
@@ -253,6 +253,7 @@ class Game{
     this.xLine = [];
     this.yLine = undefined;
     this.score = 0;
+    this.generationRate = 40;
   }
 
   checkGameOver(){
@@ -345,7 +346,7 @@ document.addEventListener("DOMContentLoaded", function(){
   createjs.Ticker.setFPS(65);
 
   //set score
-  let score = document.getElementsByClassName("score-text")[0];
+  let score = document.getElementsByClassName("score")[0];
 
 
   //get modals for pause

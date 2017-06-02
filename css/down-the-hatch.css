@@ -27,10 +27,10 @@ time, mark, audio, video {
 	background-image: url("../docs/ti84.svg");
 	background-position: top;
 	background-repeat: no-repeat;
-	background-size: contain;
+	background-size: cover;
 	background-clip: border-box;
 	margin: 0 auto;
-	width: 900px;
+	width: 500px;
 	height: 600px;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
@@ -62,7 +62,7 @@ time, mark, audio, video {
 
 #modal-content {
     background-color: #fefefe;
-    margin: 15% auto; /* 15% from the top and centered */
+    margin: 100px auto; /* 15% from the top and centered */
     padding: 20px;
     border: 1px solid #888;
     width: 250px; /* Could be more or less, depending on screen size */
@@ -73,13 +73,13 @@ time, mark, audio, video {
 }
 
 @-webkit-keyframes pause {
-	from {top: -100px; opacity: 0}
-	to {top: 0px; opacity: 1}
+	from {opacity: 0}
+	to {opacity: 1}
 }
 
 @keyframes pause {
-	from {top: -100px; opacity: 0}
-	to {top: 0px; opacity: 1}
+	from {opacity: 0}
+	to {opacity: 1}
 }
 
 .three {
@@ -89,4 +89,29 @@ time, mark, audio, video {
 
 .two {
 	max-height: 800px;
+}
+
+.score-block{
+	display: flex;
+	display: -webkit-flex;
+	justify-content: space-around;
+	-webkit-justify-content: space-around;
+}
+
+.pause-screen{
+	display: flex;
+	display: -webkit-flex;
+	flex-direction: column;
+	-webkit-flex-direction: column;
+	/*justify-content: center;
+	-webkit-justify-content: center;*/
+	align-items: center;
+	-webkit-align-items: center;
+}
+
+.buttons{
+	display: flex;
+	-webkit-display: flex;
+	justify-content: space-around;
+	-webkit-justify-content: space-around;
 }
