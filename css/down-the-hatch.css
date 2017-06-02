@@ -20,14 +20,18 @@ time, mark, audio, video {
 	list-style: none;
 }
 
+p {
+	display: inline;
+}
+
 .game {
   display: flex;
   display: -webkit-flex;
   -webkit-justify-content: center;
-	background-image: url("../docs/ti84.svg");
+	background-image: url("../docs/ti-84.svg");
 	background-position: top;
 	background-repeat: no-repeat;
-	background-size: auto;
+	background-size: cover;
 	background-clip: border-box;
 	margin: 0 auto;
 	min-width: 500px;
@@ -35,7 +39,7 @@ time, mark, audio, video {
 	padding: 0 20px;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
-	border-radius: 10px;
+	background-color: rgba(0,0,0,0.3);
 }
 
 #hatch {
@@ -113,31 +117,115 @@ time, mark, audio, video {
 	width: 100%;
 	top: 0px;
 	bottom: 0px;
-	-webkit-box-shadow: 2px 1px 10px 10px grey;
+	/*-webkit-box-shadow: 2px 1px 10px 10px grey;
 	-moz-box-shadow: 2px 1px 10px 10px grey;
-	box-shadow: 2px 1px 10px 10px grey;
-	background-color: white;
+	box-shadow: 2px 1px 10px 10px grey;*/
 	z-index: 1;
+	display: flex;
+	display: -webkit-flex;
+	align-items: center;
+	-webkit-align-items: center;
+	justify-content: center;
+	-webkit-justify-content: center;
+	opacity: 0.3;
+	background-color: black;
 }
 
 .right {
 	width: 100%;
 	top: 0px;
 	bottom: 0px;
-	-webkit-box-shadow: 1px 1px 10px 10px grey;
+	/*-webkit-box-shadow: 1px 1px 10px 10px grey;
 	-moz-box-shadow: 1px 1px 10px 10px grey;
-	box-shadow: 1px 1px 10px 10px grey;
-	background-color: white;
+	box-shadow: 1px 1px 10px 10px grey;*/
+	opacity: 0.3;
+	display: flex;
+	display: -webkit-flex;
+	align-items: center;
+	-webkit-align-items: center;
+	justify-content: center;
+	-webkit-justify-content: center;
+	background-color: black;
 }
 
 .main {
 	display: -webkit-flex;
 	display: flex;
 
-	width: 100%;
+	max-width: 1500px;
 	height: 100%;
 	background-color: white;
+	margin: 0 auto;
 }
 
 body {
+	height: 100%;
 }
+
+html {
+	height: 100%;
+}
+
+.instructions {
+	font-family: 'Crete Round', serif;
+	display: -webkit-flex;
+	display: flex;
+	flex-direction: column;
+	-webkit-flex-direction: column;
+	align-items: center;
+	-webkit-align-items: center;
+	border-radius: 5px;
+	-webkit-box-shadow: 2px 1px 1px 11px grey;
+	-moz-box-shadow: 2px 1px 1px 1px grey;
+	border: 0.5px solid grey;
+	box-shadow: 2px 1px 1px 1px grey;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	padding: 40px 20px;
+	background-color: rgba(0,0,0, 0.7);
+	color: white;
+}
+
+h2 {
+	margin: 10px;
+	font-size: 200%;
+}
+
+.instructions li {
+	margin: 5px;
+}
+
+.arrows {
+	padding-bottom: 5px;
+	border-bottom: 1px solid grey;
+}
+
+.arrows p:first-of-type, .arrows p:last-of-type{
+	font-size: 180%;
+	animation-name: Floating;
+	animation-duration: 3s;
+	animation-iteration-count: infinite;
+	animation-timing-function: ease-in-out;
+}
+
+.keys p:first-of-type, .keys p:last-of-type {
+	font-size: 140%;
+}
+
+.pause-buttons{
+	font-size: 140%;
+}
+
+.break {
+	padding-bottom: 30px;
+}
+
+/*.background-fill{
+	opacity: 0.3;
+	background-color: grey;
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	width: 500px;
+	margin: 0 auto;
+}*/

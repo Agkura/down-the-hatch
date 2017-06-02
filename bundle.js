@@ -260,7 +260,7 @@ class Game{
     if (this.ball.y <= this.ball._bounds.width && this.yLine <= this.ball.y + this.ball._bounds.width) {
       this.reset();
       let modal = document.getElementById("modal");
-      modal.style.display = "block";
+      window.toggleOff();
       createjs.Ticker.removeAllEventListeners();
       createjs.Ticker.paused = true;
     }
@@ -345,6 +345,11 @@ document.addEventListener("DOMContentLoaded", function(){
 
   createjs.Ticker.setFPS(65);
 
+  //get panels
+  const left = document.getElementsByClassName("left")[0];
+  const right = document.getElementsByClassName("right")[0];
+  const background = document.getElementsByClassName("background-fill")[0];
+
   //set score
   let score = document.getElementsByClassName("score")[0];
 
@@ -365,7 +370,7 @@ document.addEventListener("DOMContentLoaded", function(){
     game.reset();
     createjs.Ticker.paused = false;
     beginGame = createjs.Ticker.on("tick", game.start);
-    modal.style.display = "none";
+    toggleOn();
   }
   reset.onclick = hardReset;
 
@@ -393,12 +398,36 @@ document.addEventListener("DOMContentLoaded", function(){
     if (createjs.Ticker.paused) {
       createjs.Ticker.off("tick", beginGame);
       score.innerHTML = game.getScore();
-      modal.style.display = "block";
+      toggleOff();
     } else {
       beginGame = createjs.Ticker.on("tick", beginGame);
-      modal.style.display = "none";
+      toggleOn();
     }
   });
+
+  const toggleOn = () => {
+    modal.style.display = "none";
+    left.style.backgroundColor = "black";
+    left.style.opacity = 0.3;
+    left.style.zIndex = 1;
+    right.style.backgroundColor = "black";
+    right.style.opacity = 0.3;
+    right.style.zIndex = 0;
+    background.style.backgroundColor = "white";
+}
+
+  const toggleOff = () => {
+    modal.style.display = "block";
+    left.style.backgroundColor = "white";
+    left.style.opacity = 1;
+    left.style.zIndex = 10;
+    right.style.backgroundColor = "white";
+    right.style.opacity = 1;
+    right.style.zIndex = 10;
+    background.style.backgroundColor = "grey";
+    background.style.opacity = 0.3;
+  }
+  window.toggleOff = toggleOff;
 
   //allow user to escape modal and continue game on outside click
   window.onclick = function(event) {

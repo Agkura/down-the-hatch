@@ -15,16 +15,39 @@
       ga('send', 'pageview');
 
     </script>
+    <link href="https://fonts.googleapis.com/css?family=Crete+Round" rel="stylesheet">
     <script src="https://code.createjs.com/easeljs-0.8.2.min.js"></script>
     <script src="bundle.js"></script>
     <script src="lib/keymaster/keymaster.js"></script>
   </head>
 
   <body>
+    <div class="background-fill">
+
+    </div>
     <section class="main">
 
       <div class="left">
-
+        <ul class="instructions">
+          <li>
+            <h2>Down the Hatch</h2>
+          </li>
+          <li class="arrows">
+            <p>&larr;</p> <p> and </p><p>&rarr;</p>
+          </li>
+          <li class="keys">
+            <p>'A' </p> <p>  and  </p><p> 'D'</p>
+          </li>
+          <li class="break">
+            to move the ball
+          </li>
+          <li class="pause-buttons">
+            <p> 'ESC' </p><p> / </p> <p> "W" </p><p> / </p><p> &uarr; </p>
+          </li>
+          <li>
+            to pause and unpause
+          </li>
+        </ul>
       </div>
 
       <div class="game">
@@ -34,9 +57,11 @@
       </div>
 
       <div class="right">
-
+        <ul class="instructions">
+  
+        </ul>
       </div>
-      
+
     </section>
 
     <div id="modal">
