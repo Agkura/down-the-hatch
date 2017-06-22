@@ -170,10 +170,7 @@ html {
 	align-items: center;
 	-webkit-align-items: center;
 	border-radius: 5px;
-	-webkit-box-shadow: 3px 3px 1px 2px grey;
-	-moz-box-shadow: 3px 3px 1px 2px grey;
-	box-shadow: 3px 3px 1px 2px grey;
-	border: 0.5px solid grey;
+	/*border: 0.5px solid grey;*/
 	box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	padding: 40px 20px;
@@ -246,4 +243,8 @@ h2 {
 
 .right .instructions > li {
 	font-size: 140%;
+}
+
+.right .instructions:last-child {
+	margin-left: 15px;
 }
