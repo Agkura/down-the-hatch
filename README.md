@@ -1,5 +1,5 @@
 ## Down the Hatch
-[comment]: <> [live](http://matthew-moon.com/down-the-hatch)
+~~[live](http://matthew-moon.com/down-the-hatch)~~ - currently inactive
 
 Down the Hatch is a Javascript recreation of the Texas Instruments graphing calculator classic, *Falldown*, which itself is possibly an homage to *Fall Down 2600* by Atari.
 
